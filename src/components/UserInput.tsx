@@ -1,4 +1,3 @@
-// components/UserInput.tsx
 import { useState } from "react";
 
 interface UserInputProps {

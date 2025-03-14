@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { FaStar, FaCodeBranch, FaBuilding, FaClock } from "react-icons/fa";
 import Sections from "./Sections";
+import { GitHubData } from "../types/types";
 
 const StatsContainer = styled.div`
   display: grid;
@@ -34,6 +35,7 @@ const ListItem = styled.li`
   gap: 10px;
   padding: 10px;
   background: #fff;
+  color: #000;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   margin-bottom: 8px;
@@ -56,29 +58,6 @@ const TimeStamp = styled.span`
   font-size: 0.9rem;
   color: #777;
 `;
-
-interface GitHubData {
-  user: {
-    public_repos?: number;
-    followers?: number;
-  };
-  repos: {
-    name: string;
-    stargazers_count: number;
-    forks_count: number;
-  }[];
-  orgs: {
-    login: string;
-    avatar_url: string;
-  }[];
-  events: {
-    type: string;
-    repo: {
-      name: string;
-    };
-    created_at: string;
-  }[];
-}
 
 interface GitHubStatsProps {
   data: GitHubData;

@@ -7,7 +7,14 @@ const ThemeToggle = () => {
   return (
     <button
       onClick={toggleTheme}
-      style={{ fontSize: "1.5rem", cursor: "pointer" }}
+      style={{
+        fontSize: "1.5rem",
+        cursor: "pointer",
+        padding: "10px",
+        height: "55px",
+        width: "55px",
+        borderRadius: "50%",
+      }}
     >
       {theme === "light" ? <FaMoon /> : <FaSun />}
     </button>

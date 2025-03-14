@@ -1,4 +1,3 @@
-// components/Layout.tsx
 import { ReactNode } from "react";
 import ThemeToggle from "../theme/ThemeToggle";
 
