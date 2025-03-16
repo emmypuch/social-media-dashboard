@@ -1,0 +1,22 @@
+{
+  "home": {
+    "title": "Enter your social media username",
+    "placeholder": "Enter GitHub, Twitter, or Instagram username",
+    "submit": "Submit"
+  },
+  "dashboard": {
+    "title": "Social Media Dashboard",
+    "username": "Displaying statistics for:",
+    "noUsername": "No username provided.",
+    "loading": "Loading...",
+    "error": "Failed to fetch data. Please try again later.",
+     "repositories": "Repositories",
+            "followers": "Followers",
+            "topRepositories": "Top Repositories",
+            "noRepositories": "No repositories available.",
+            "organizations": "Organizations",
+            "noOrganizations": "Not part of any organizations.",
+            "recentActivity": "Recent Activity",
+            "noRecentActivity": "No recent activity found."
+  }
+}

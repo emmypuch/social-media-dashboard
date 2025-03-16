@@ -1,7 +1,8 @@
+import { useTranslation } from "react-i18next";
+import ProgressBar from "react-bootstrap/ProgressBar";
 import { useSearchParams } from "react-router-dom";
 import styled from "styled-components";
 import { ClipLoader } from "react-spinners";
-// import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -10,12 +11,18 @@ import {
   Title,
   Tooltip,
   Legend,
+  ArcElement,
+  PointElement,
+  LineElement,
 } from "chart.js";
 import { useSocialMediaData } from "../hooks/useSocialMediaData";
-// import Sections from "../components/Sections";
+import Sections from "../components/Sections";
 import ThemeToggle from "../components/theme/ThemeToggle";
 import { useTheme } from "../components/context/ThemeContext";
 import SocialCard from "../components/social-media-cards/SocialCard";
+import { darkTheme } from "../types/theme";
+import { useEffect, useState } from "react";
+import ChartWrapper from "../components/charts/ChartWrapper";
 
 ChartJS.register(
   CategoryScale,
@@ -23,12 +30,25 @@ ChartJS.register(
   BarElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
+  ArcElement,
+  PointElement,
+  LineElement
 );
 
+interface LineChartData {
+  labels: string[];
+  datasets: {
+    label: string;
+    data: number[];
+    borderColor: string;
+    fill: boolean;
+  }[];
+}
+
 const Container = styled.div`
-  max-width: 1200px;
-  margin: 20px auto;
+  // max-width: 1200px;
+  // margin: 20px auto;
   padding: 20px;
   font-family: "Poppins", sans-serif;
   background: ${({ theme }) => theme.background};
@@ -70,7 +90,14 @@ const CardsContainer = styled.div`
   flex-wrap: wrap;
 `;
 
+const ChartContainer = styled.div`
+  width: 100%;
+  height: 300px;
+  margin: 0 auto;
+`;
+
 const Dashboard = () => {
+  const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const username = searchParams.get("username") ?? "";
   const { themeObject } = useTheme();
@@ -78,6 +105,29 @@ const Dashboard = () => {
   const { githubQuery } = useSocialMediaData({
     github: username,
   });
+
+  const [lineChartData, setLineChartData] = useState<LineChartData>({
+    labels: [],
+    datasets: [],
+  });
+
+  useEffect(() => {
+    if (githubQuery.data) {
+      const labels = githubQuery.data.monthlyGrowth.map((item) => item.month);
+      const data = githubQuery.data.monthlyGrowth.map((item) => item.followers);
+      setLineChartData({
+        labels,
+        datasets: [
+          {
+            label: "Followers Growth",
+            data,
+            borderColor: "#4A90E2",
+            fill: false,
+          },
+        ],
+      });
+    }
+  }, [githubQuery.data]);
 
   if (!username) {
     return (
@@ -98,6 +148,7 @@ const Dashboard = () => {
   if (githubQuery.isError || !githubQuery.data) {
     return (
       <Container>
+        <p>{t("dashboard.error")}</p>
         <p>Failed to fetch data. Please try again later.</p>
       </Container>
     );
@@ -108,29 +159,58 @@ const Dashboard = () => {
     themeObject,
   };
 
-  // const chartData = {
-  //   labels: ["GitHub Followers", "GitHub Repos"],
-  //   datasets: [
-  //     {
-  //       label: "Social Media Stats",
-  //       data: [
-  //         githubQuery.data.user?.followers ?? 0,
-  //         githubQuery.data.user?.public_repos ?? 0,
-  //       ],
-  //       backgroundColor: ["#4A90E2", "#50E3C2"],
-  //       borderRadius: 5,
-  //     },
-  //   ],
-  // };
+  const chartData = {
+    labels: ["GitHub Followers", "GitHub Repos"],
+    datasets: [
+      {
+        label: "Social Media Stats",
+        data: [
+          githubQuery.data.user?.followers ?? 0,
+          githubQuery.data.user?.public_repos ?? 0,
+        ],
+        backgroundColor: darkTheme
+          ? ["#6e8efb", "#50E3C2"]
+          : ["#4A90E2", "#50E3C2"],
+        borderRadius: 5,
+      },
+    ],
+  };
+
+  const pieChartData = {
+    labels: ["Likes", "Comments", "Shares"],
+    datasets: [
+      {
+        data: [300, 50, 100],
+        backgroundColor: ["#4A90E2", "#50E3C2", "#FF6384"],
+      },
+    ],
+  };
+
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: false,
+      },
+      tooltip: {
+        enabled: false,
+      },
+    },
+  };
+
+  const followerGoal = 1000;
+  const currentFollowers = githubQuery.data.user?.followers ?? 0;
+  const progress = (currentFollowers / followerGoal) * 100;
 
   return (
     <Container theme={themeObject}>
       <ThemeToggleWrapper>
         <ThemeToggle />
       </ThemeToggleWrapper>
-      <Header>Social Media Dashboard</Header>
+      <Header>{t("dashboard.title")}</Header>
       <Username>
-        Displaying statistics for: <strong>{username}</strong>
+        {t("dashboard.username")} <strong>{username}</strong>
       </Username>
 
       <CardsContainer>
@@ -138,24 +218,30 @@ const Dashboard = () => {
         {/* Add more SocialCard components for other platforms as needed */}
       </CardsContainer>
 
-      {/* <Sections title="Statistics Overview">
-        <Bar
-          data={chartData}
-          options={{
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-              legend: {
-                position: "top",
-              },
-              tooltip: {
-                enabled: true,
-              },
-            },
-          }}
-          style={{ height: "10px", marginBottom: "20px" }}
-        />
-      </Sections> */}
+      <Sections title="Statistics Overview">
+        <ChartContainer>
+          <ChartWrapper type="bar" data={chartData} options={chartOptions} />
+        </ChartContainer>
+      </Sections>
+      <Sections title="Followers Growth Over Time">
+        <ChartContainer>
+          <ChartWrapper
+            type="line"
+            data={lineChartData}
+            options={chartOptions}
+          />
+        </ChartContainer>
+      </Sections>
+
+      <Sections title="Engagement Distribution">
+        <ChartContainer>
+          <ChartWrapper type="pie" data={pieChartData} options={chartOptions} />
+        </ChartContainer>
+      </Sections>
+
+      <Sections title="Follower Goal Progress">
+        <ProgressBar now={progress} label={`${Math.round(progress)}%`} />
+      </Sections>
     </Container>
   );
 };

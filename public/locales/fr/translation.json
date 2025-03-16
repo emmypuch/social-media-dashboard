@@ -1,0 +1,22 @@
+{
+  "home": {
+    "title": "Entrez votre nom d'utilisateur de réseaux sociaux",
+    "placeholder": "Entrez votre nom d'utilisateur GitHub, Twitter ou Instagram",
+    "submit": "Soumettre"
+  },
+  "dashboard": {
+    "title": "Tableau de bord des réseaux sociaux",
+    "username": "Affichage des statistiques pour :",
+    "noUsername": "Aucun nom d'utilisateur fourni.",
+    "loading": "Chargement...",
+    "error": "Échec de la récupération des données. Veuillez réessayer plus tard.",
+    "repositories": "Référentiels",
+            "followers": "Abonnés",
+            "topRepositories": "Meilleurs référentiels",
+            "noRepositories": "Aucun référentiel disponible.",
+            "organizations": "Organisations",
+            "noOrganizations": "Ne fait partie d'aucune organisation.",
+            "recentActivity": "Activité récente",
+            "noRecentActivity": "Aucune activité récente trouvée."
+  }
+}

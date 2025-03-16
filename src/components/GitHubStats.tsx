@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { FaStar, FaCodeBranch, FaBuilding, FaClock } from "react-icons/fa";
 import Sections from "./Sections";
@@ -64,9 +65,12 @@ interface GitHubStatsProps {
 }
 
 const GitHubStats = ({ data }: GitHubStatsProps) => {
+  const { t } = useTranslation();
+
   if (data.user?.public_repos === 0) {
-    throw new Error("Test error: No public repositories found.");
+    throw new Error(t("dashboard.error"));
   }
+
   return (
     <Sections title="GitHub Overview">
       {/* Stats Cards */}
@@ -74,12 +78,12 @@ const GitHubStats = ({ data }: GitHubStatsProps) => {
         <StatCard>
           <FaCodeBranch size={24} color="#4A90E2" />
           <StatNumber>{data.user?.public_repos ?? "--"}</StatNumber>
-          <p>Repositories</p>
+          <p>{t("dashboard.repositories")}</p>
         </StatCard>
         <StatCard>
           <FaBuilding size={24} color="#50E3C2" />
           <StatNumber>{data.user?.followers ?? "--"}</StatNumber>
-          <p>Followers</p>
+          <p>{t("dashboard.followers")}</p>
         </StatCard>
       </StatsContainer>
 
@@ -96,7 +100,7 @@ const GitHubStats = ({ data }: GitHubStatsProps) => {
             ))}
           </List>
         ) : (
-          <EmptyState>No repositories available.</EmptyState>
+          <EmptyState>{t("dashboard.noRepositories")}</EmptyState>
         )}
       </Sections>
 
@@ -112,7 +116,7 @@ const GitHubStats = ({ data }: GitHubStatsProps) => {
             ))}
           </List>
         ) : (
-          <EmptyState>Not part of any organizations.</EmptyState>
+          <EmptyState>{t("dashboard.noOrganizations")}</EmptyState>
         )}
       </Sections>
 
@@ -133,7 +137,7 @@ const GitHubStats = ({ data }: GitHubStatsProps) => {
             ))}
           </List>
         ) : (
-          <EmptyState>No recent activity found.</EmptyState>
+          <EmptyState>{t("dashboard.noRecentActivity")}</EmptyState>
         )}
       </Sections>
     </Sections>

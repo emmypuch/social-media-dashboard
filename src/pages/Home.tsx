@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { ClipLoader } from "react-spinners";
@@ -111,6 +112,7 @@ const ThemeToggleWrapper = styled.div`
 `;
 
 const Home = () => {
+  const { t } = useTranslation();
   const [username, setUsername] = useState("");
   const [loading, setLoading] = useState(false);
   const { themeObject } = useTheme();
@@ -130,17 +132,17 @@ const Home = () => {
       <ThemeToggleWrapper>
         <ThemeToggle />
       </ThemeToggleWrapper>
-      <Title>Enter your social media username</Title>
+      <Title>{t("home.title")}</Title>
       <Form onSubmit={handleSubmit}>
         <Input
           type="text"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-          placeholder="Enter GitHub, Twitter, or Instagram username"
+          placeholder={t("home.placeholder")}
           disabled={loading}
         />
         <Button type="submit" disabled={loading}>
-          {loading ? <ClipLoader color="#fff" size={20} /> : "Submit"}
+          {loading ? <ClipLoader color="#fff" size={20} /> : t("home.submit")}{" "}
         </Button>
       </Form>
     </Container>

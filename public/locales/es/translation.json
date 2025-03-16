@@ -1,0 +1,22 @@
+{
+  "home": {
+    "title": "Ingresa tu nombre de usuario de redes sociales",
+    "placeholder": "Ingresa tu nombre de usuario de GitHub, Twitter o Instagram",
+    "submit": "Enviar"
+  },
+  "dashboard": {
+    "title": "Panel de Redes Sociales",
+    "username": "Mostrando estadísticas para:",
+    "noUsername": "No se proporcionó nombre de usuario.",
+    "loading": "Cargando...",
+    "error": "Error al obtener los datos. Por favor, inténtelo de nuevo más tarde.",
+     "repositories": "Repositorios",
+            "followers": "Seguidores",
+            "topRepositories": "Repositorios principales",
+            "noRepositories": "No hay repositorios disponibles.",
+            "organizations": "Organizaciones",
+            "noOrganizations": "No forma parte de ninguna organización.",
+            "recentActivity": "Actividad reciente",
+            "noRecentActivity": "No se encontró actividad reciente."
+  }
+}

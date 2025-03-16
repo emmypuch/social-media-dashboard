@@ -8,6 +8,7 @@ import {
 import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
 import { ErrorBoundary } from "./components/error-boundary/ErrorBoundary";
+import LanguageSwitcher from "./components/language-switcher/LanguageSwitcher";
 
 const queryClient = new QueryClient();
 
@@ -19,6 +20,7 @@ function App() {
       <CustomThemeProvider>
         <ThemeProvider theme={themeObject}>
           <Router>
+            <LanguageSwitcher />
             <Routes>
               <Route path="/" element={<Home />} />
               <Route

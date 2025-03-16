@@ -31,6 +31,7 @@ interface GitHubData {
   repos: GitHubRepo[];
   orgs: GitHubOrg[];
   events: GitHubEvent[];
+  monthlyGrowth: { month: string; followers: number }[]; 
 }
 
 const fetchGitHubData = async (username: string): Promise<GitHubData> => {
@@ -46,11 +47,21 @@ const fetchGitHubData = async (username: string): Promise<GitHubData> => {
       axios.get(`https://api.github.com/users/${username}/events`),
     ]);
 
+     const monthlyGrowth = [
+    { month: "Jan", followers: 100 },
+    { month: "Feb", followers: 150 },
+    { month: "Mar", followers: 200 },
+    { month: "Apr", followers: 300 },
+    { month: "May", followers: 400 },
+    { month: "Jun", followers: 500 },
+  ];
+
   return {
     user: userResponse.data,
     repos: reposResponse.data,
     orgs: orgsResponse.data,
     events: eventsResponse.data,
+    monthlyGrowth,
   };
 };
 

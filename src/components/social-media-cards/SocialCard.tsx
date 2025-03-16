@@ -11,10 +11,6 @@ interface SocialCardProps {
   data: GitHubData;
 }
 
-interface CardContentProps {
-  isExpanded: boolean;
-}
-
 const CardContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -39,8 +35,8 @@ const IconWrapper = styled.div`
   margin-bottom: 10px;
 `;
 
-const CardContent = styled.div<CardContentProps>`
-  display: ${({ isExpanded }) => (isExpanded ? "block" : "none")};
+const CardContent = styled.div<{ $isExpanded: boolean }>`
+  display: ${({ $isExpanded }) => ($isExpanded ? "block" : "none")};
   width: 100%;
 `;
 
@@ -68,7 +64,6 @@ const SocialCard: React.FC<SocialCardProps> = ({ platform, data }) => {
     switch (platform) {
       case "github":
         return <GitHubStats data={data} />;
-      // Add cases for other platforms as needed
       default:
         return null;
     }
@@ -77,7 +72,7 @@ const SocialCard: React.FC<SocialCardProps> = ({ platform, data }) => {
   return (
     <CardContainer onClick={handleClick} theme={data.themeObject}>
       <IconWrapper>{renderIcon()}</IconWrapper>
-      <CardContent isExpanded={isExpanded}>{renderStats()}</CardContent>
+      <CardContent $isExpanded={isExpanded}>{renderStats()}</CardContent>
     </CardContainer>
   );
 };
