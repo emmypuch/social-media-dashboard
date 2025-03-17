@@ -171,7 +171,6 @@ const Dashboard = () => {
     return (
       <Container>
         <p>{t("dashboard.error")}</p>
-        <p>Failed to fetch data. Please try again later.</p>
       </Container>
     );
   }
