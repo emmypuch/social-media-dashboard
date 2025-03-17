@@ -1,36 +1,6 @@
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 
-const LanguageSwitcher = () => {
-  const { i18n } = useTranslation();
-
-  const changeLanguage = (lng: string) => {
-    i18n.changeLanguage(lng).catch((err) => {
-      console.error("Error changing language:", err);
-    });
-  };
-
-  return (
-    <DropdownContainer>
-      <DropdownButton>🌐 Language</DropdownButton>
-      <DropdownContent>
-        <DropdownItem onClick={() => changeLanguage("en")}>
-          English
-        </DropdownItem>
-        <DropdownItem onClick={() => changeLanguage("es")}>
-          Español
-        </DropdownItem>
-        <DropdownItem onClick={() => changeLanguage("fr")}>
-          Français
-        </DropdownItem>
-      </DropdownContent>
-    </DropdownContainer>
-  );
-};
-
-export default LanguageSwitcher;
-
-// Styled Components for Dropdown
 const DropdownContainer = styled.div`
   position: relative;
   display: inline-block;
@@ -77,3 +47,32 @@ const DropdownItem = styled.div`
     background: ${({ theme }) => theme.buttonHoverBackground};
   }
 `;
+
+const LanguageSwitcher = () => {
+  const { i18n } = useTranslation();
+
+  const changeLanguage = (lng: string) => {
+    i18n.changeLanguage(lng).catch((err) => {
+      console.error("Error changing language:", err);
+    });
+  };
+
+  return (
+    <DropdownContainer>
+      <DropdownButton>🌐 Language</DropdownButton>
+      <DropdownContent>
+        <DropdownItem onClick={() => changeLanguage("en")}>
+          English
+        </DropdownItem>
+        <DropdownItem onClick={() => changeLanguage("es")}>
+          Español
+        </DropdownItem>
+        <DropdownItem onClick={() => changeLanguage("fr")}>
+          Français
+        </DropdownItem>
+      </DropdownContent>
+    </DropdownContainer>
+  );
+};
+
+export default LanguageSwitcher;

@@ -6,17 +6,26 @@
   },
   "dashboard": {
     "title": "Social Media Dashboard",
+    "backToHome": "Back to Home",
     "username": "Displaying statistics for:",
     "noUsername": "No username provided.",
     "loading": "Loading...",
     "error": "Failed to fetch data. Please try again later.",
-     "repositories": "Repositories",
-            "followers": "Followers",
-            "topRepositories": "Top Repositories",
-            "noRepositories": "No repositories available.",
-            "organizations": "Organizations",
-            "noOrganizations": "Not part of any organizations.",
-            "recentActivity": "Recent Activity",
-            "noRecentActivity": "No recent activity found."
+    "repositories": "Repositories",
+    "followers": "Followers",
+    "topRepositories": "Top Repositories",
+    "noRepositories": "No repositories available.",
+    "organizations": "Organizations",
+    "noOrganizations": "Not part of any organizations.",
+    "recentActivity": "Recent Activity",
+    "noRecentActivity": "No recent activity found.",
+    "statisticsOverview": "Statistics Overview",
+    "followersGrowth": "Followers Growth Over Time",
+    "engagementDistribution": "Engagement Distribution",
+    "followerGoalProgress": "Follower Goal Progress",
+    "likes": "Likes",
+    "shares": "Shares",
+    "comments": "Comments"
+
   }
 }

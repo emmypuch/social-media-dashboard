@@ -15,6 +15,7 @@ import {
   PointElement,
   LineElement,
 } from "chart.js";
+import ChartDataLabels from "chartjs-plugin-datalabels";
 import { useSocialMediaData } from "../hooks/useSocialMediaData";
 import Sections from "../components/Sections";
 import ThemeToggle from "../components/theme/ThemeToggle";
@@ -23,6 +24,8 @@ import SocialCard from "../components/social-media-cards/SocialCard";
 import { darkTheme } from "../types/theme";
 import { useEffect, useState } from "react";
 import ChartWrapper from "../components/charts/ChartWrapper";
+import { useNavigate } from "react-router-dom";
+import { FaArrowLeft } from "react-icons/fa";
 
 ChartJS.register(
   CategoryScale,
@@ -33,7 +36,8 @@ ChartJS.register(
   Legend,
   ArcElement,
   PointElement,
-  LineElement
+  LineElement,
+  ChartDataLabels
 );
 
 interface LineChartData {
@@ -63,6 +67,23 @@ const ThemeToggleWrapper = styled.div`
   position: absolute;
   top: 20px;
   right: 20px;
+`;
+
+const BackButton = styled.div`
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  color: ${({ theme }) => theme.color};
+  &:hover {
+    opacity: 0.8;
+  }
+`;
+
+const BackIcon = styled(FaArrowLeft)`
+  margin-right: 8px;
 `;
 
 const Header = styled.h2`
@@ -101,6 +122,7 @@ const Dashboard = () => {
   const [searchParams] = useSearchParams();
   const username = searchParams.get("username") ?? "";
   const { themeObject } = useTheme();
+  const navigate = useNavigate();
 
   const { githubQuery } = useSocialMediaData({
     github: username,
@@ -119,7 +141,7 @@ const Dashboard = () => {
         labels,
         datasets: [
           {
-            label: "Followers Growth",
+            label: t("dashboard.followersGrowth"),
             data,
             borderColor: "#4A90E2",
             fill: false,
@@ -127,7 +149,7 @@ const Dashboard = () => {
         ],
       });
     }
-  }, [githubQuery.data]);
+  }, [githubQuery.data, t]);
 
   if (!username) {
     return (
@@ -160,10 +182,10 @@ const Dashboard = () => {
   };
 
   const chartData = {
-    labels: ["GitHub Followers", "GitHub Repos"],
+    labels: [t("dashboard.followers"), t("dashboard.repositories")],
     datasets: [
       {
-        label: "Social Media Stats",
+        label: t("dashboard.statisticsOverview"),
         data: [
           githubQuery.data.user?.followers ?? 0,
           githubQuery.data.user?.public_repos ?? 0,
@@ -177,7 +199,11 @@ const Dashboard = () => {
   };
 
   const pieChartData = {
-    labels: ["Likes", "Comments", "Shares"],
+    labels: [
+      t("dashboard.likes"),
+      t("dashboard.comments"),
+      t("dashboard.shares"),
+    ],
     datasets: [
       {
         data: [300, 50, 100],
@@ -185,6 +211,18 @@ const Dashboard = () => {
       },
     ],
   };
+
+  interface ChartContext {
+    chart: {
+      data: {
+        datasets: {
+          data: number[];
+        }[];
+        labels: string[];
+      };
+    };
+    dataIndex: number;
+  }
 
   const chartOptions = {
     responsive: true,
@@ -196,6 +234,23 @@ const Dashboard = () => {
       tooltip: {
         enabled: false,
       },
+      datalabels: {
+        color: "#000",
+        formatter: (value: number, context: ChartContext) => {
+          const total = context.chart.data.datasets[0].data.reduce(
+            (a: number, b: number) => a + b,
+            0
+          );
+          const percentage = ((value / total) * 100).toFixed(1) + "%";
+          return (
+            context.chart.data.labels[context.dataIndex] + "\n" + percentage
+          );
+        },
+        font: {
+          weight: "bold",
+          size: 14,
+        },
+      },
     },
   };
 
@@ -205,6 +260,12 @@ const Dashboard = () => {
 
   return (
     <Container theme={themeObject}>
+      <BackButton onClick={() => navigate("/")}>
+        {" "}
+        <BackIcon />
+        <span>{t("dashboard.backToHome")}</span>
+      </BackButton>
+
       <ThemeToggleWrapper>
         <ThemeToggle />
       </ThemeToggleWrapper>

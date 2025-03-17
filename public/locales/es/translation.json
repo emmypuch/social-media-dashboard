@@ -6,17 +6,27 @@
   },
   "dashboard": {
     "title": "Panel de Redes Sociales",
+    "backToHome": "Volver al inicio",
     "username": "Mostrando estadísticas para:",
     "noUsername": "No se proporcionó nombre de usuario.",
     "loading": "Cargando...",
     "error": "Error al obtener los datos. Por favor, inténtelo de nuevo más tarde.",
-     "repositories": "Repositorios",
-            "followers": "Seguidores",
-            "topRepositories": "Repositorios principales",
-            "noRepositories": "No hay repositorios disponibles.",
-            "organizations": "Organizaciones",
-            "noOrganizations": "No forma parte de ninguna organización.",
-            "recentActivity": "Actividad reciente",
-            "noRecentActivity": "No se encontró actividad reciente."
+    "repositories": "Repositorios",
+    "followers": "Seguidores",
+    "topRepositories": "Repositorios principales",
+    "noRepositories": "No hay repositorios disponibles.",
+    "organizations": "Organizaciones",
+    "noOrganizations": "No forma parte de ninguna organización.",
+    "recentActivity": "Actividad reciente",
+    "noRecentActivity": "No se encontró actividad reciente.",
+    "statisticsOverview": "Resumen de Estadísticas",
+    "followersGrowth": "Crecimiento de Seguidores en el Tiempo",
+    "engagementDistribution": "Distribución de Participación",
+    "followerGoalProgress": "Progreso del Objetivo de Seguidores",
+    "likes": "Me gusta",
+    "shares": "Compartidos",
+    "comments": "Comentarios"
+
+
   }
 }
