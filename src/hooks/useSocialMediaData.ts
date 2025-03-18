@@ -34,6 +34,18 @@ interface GitHubData {
   monthlyGrowth: { month: string; followers: number }[]; 
 }
 
+interface YouTubeChannelStats {
+  subscriberCount: number;
+  viewCount: number;
+  videoCount: number;
+}
+
+interface RedditUserStats {
+  totalKarma: number;
+  postKarma: number;
+  commentKarma: number;
+}
+
 const fetchGitHubData = async (username: string): Promise<GitHubData> => {
   if (!username) {
     throw new Error("GitHub username is required");
@@ -67,19 +79,37 @@ const fetchGitHubData = async (username: string): Promise<GitHubData> => {
 
 export default fetchGitHubData;
 
-// Instagram data
-// const fetchInstagramData = async (username: string) => {
-//   const accessToken = "YOUR_VALID_INSTAGRAM_ACCESS_TOKEN"; // Replace with actual token
-//   if (!username) {
-//     throw new Error("Instagram username is required");
-//   }
-//   const url = `https://graph.instagram.com/me?fields=id,username,media_count,followers_count&access_token=${accessToken}`;
-//   const { data } = await axios.get(url);
-//   return data;
-// };
+// Fetch YouTube Data Function
+const fetchYouTubeData = async (channelId: string, apiKey: string): Promise<YouTubeChannelStats> => {
+  const url = `https://www.googleapis.com/youtube/v3/channels?part=statistics&id=${channelId}&key=${apiKey}`;
+  const response = await axios.get(url);
+
+  const stats = response.data.items[0].statistics;
+  return {
+    subscriberCount: parseInt(stats.subscriberCount),
+    viewCount: parseInt(stats.viewCount),
+    videoCount: parseInt(stats.videoCount),
+  };
+};
+
+const fetchRedditData = async (username: string): Promise<RedditUserStats> => {
+  const url = `https://www.reddit.com/user/${username}/about.json`;
+  const response = await axios.get(url);
+
+  const data = response.data.data;
+  return {
+    totalKarma: data.total_karma,
+    postKarma: data.link_karma,
+    commentKarma: data.comment_karma,
+  };
+};
 
 // Custom hook to fetch social media data
-export const useSocialMediaData = (usernames: { github?: string; instagram?: string }) => {
+export const useSocialMediaData = (usernames: { github?: string; youtube?: string, reddit?: string }) => {
+   const youtubeApiKey = import.meta.env.VITE_YOUTUBE_API_KEY; 
+  const youtubeChannelId = import.meta.env.VITE_YOUTUBE_CHANNEL_ID;
+
+   // GitHub Query
   const githubQuery = useQuery({
     queryKey: ["github", usernames.github],
     queryFn: () =>
@@ -89,11 +119,25 @@ export const useSocialMediaData = (usernames: { github?: string; instagram?: str
     enabled: !!usernames.github,
   });
 
-//   const instagramQuery = useQuery({
-//     queryKey: ["instagram", usernames.instagram],
-//     queryFn: () => usernames.instagram ? fetchInstagramData(usernames.instagram) : Promise.reject("Instagram username missing"),
-//     enabled: !!usernames.instagram,
-//   });
+  // YouTube Query
+  const youtubeQuery = useQuery({
+    queryKey: ["youtube", usernames.youtube],
+    queryFn: () =>
+      usernames.youtube
+        ? fetchYouTubeData(youtubeChannelId, youtubeApiKey) 
+        : Promise.reject("YouTube channel ID missing"),
+    enabled: !!usernames.youtube,
+  });
 
-  return { githubQuery,  };
+   // Reddit Query
+   const redditQuery = useQuery({
+    queryKey: ["reddit", usernames.reddit],
+    queryFn: () =>
+      usernames.reddit
+        ? fetchRedditData(usernames.reddit)
+        : Promise.reject("Reddit username missing"),
+    enabled: !!usernames.reddit,
+  });
+
+  return { githubQuery, youtubeQuery, redditQuery };
 };

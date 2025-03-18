@@ -1,14 +1,31 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { FaTwitter, FaGithub, FaLinkedin } from "react-icons/fa";
-import GitHubStats from "../GitHubStats";
+import { FaTwitter, FaGithub, FaLinkedin, FaYoutube } from "react-icons/fa";
+// import GitHubStats from "../GitHubStats";
 import { GitHubData } from "../../types/types";
+// import YouTubeStats from "../YoutubeStats";
 
-type Platform = "github" | "twitter" | "linkedin";
+interface YouTubeData {
+  subscriberCount: number;
+  viewCount: number;
+  videoCount: number;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  themeObject?: any;
+}
+
+interface RedditData {
+  totalKarma: number;
+  postKarma: number;
+  commentKarma: number;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  themeObject?: any;
+}
+
+type Platform = "github" | "twitter" | "linkedin" | "youtube" | "reddit";
 
 interface SocialCardProps {
   platform: Platform;
-  data: GitHubData;
+  data: GitHubData | YouTubeData | RedditData;
 }
 
 const CardContainer = styled.div`
@@ -55,24 +72,52 @@ const SocialCard: React.FC<SocialCardProps> = ({ platform, data }) => {
         return <FaTwitter />;
       case "linkedin":
         return <FaLinkedin />;
+      case "youtube":
+        return <FaYoutube />;
       default:
         return null;
     }
   };
 
-  const renderStats = () => {
-    switch (platform) {
-      case "github":
-        return <GitHubStats data={data} />;
-      default:
-        return null;
+  const renderContent = () => {
+    let content;
+    if (platform === "github") {
+      const githubData = data as GitHubData;
+      content = (
+        <>
+          <p>Followers: {githubData.user?.followers}</p>
+          <p>Repositories: {githubData.user?.public_repos}</p>
+        </>
+      );
+    } else if (platform === "youtube") {
+      const youtubeData = data as YouTubeData;
+      content = (
+        <>
+          <p>Subscribers: {youtubeData.subscriberCount}</p>
+          <p>Views: {youtubeData.viewCount}</p>
+          <p>Videos: {youtubeData.videoCount}</p>
+        </>
+      );
+    } else if (platform === "reddit") {
+      const redditData = data as RedditData;
+      content = (
+        <>
+          <p>Total Karma: {redditData.totalKarma}</p>
+          <p>Post Karma: {redditData.postKarma}</p>
+          <p>Comment Karma: {redditData.commentKarma}</p>
+        </>
+      );
+    } else {
+      content = <p>No data available for this platform.</p>;
     }
+
+    return content;
   };
 
   return (
     <CardContainer onClick={handleClick} theme={data.themeObject}>
       <IconWrapper>{renderIcon()}</IconWrapper>
-      <CardContent $isExpanded={isExpanded}>{renderStats()}</CardContent>
+      <CardContent $isExpanded={isExpanded}>{renderContent()}</CardContent>
     </CardContainer>
   );
 };

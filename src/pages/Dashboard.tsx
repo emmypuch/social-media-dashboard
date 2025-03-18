@@ -124,8 +124,9 @@ const Dashboard = () => {
   const { themeObject } = useTheme();
   const navigate = useNavigate();
 
-  const { githubQuery } = useSocialMediaData({
+  const { githubQuery, youtubeQuery, redditQuery } = useSocialMediaData({
     github: username,
+    youtube: import.meta.env.VITE_YOUTUBE_CHANNEL_ID,
   });
 
   const [lineChartData, setLineChartData] = useState<LineChartData>({
@@ -159,7 +160,11 @@ const Dashboard = () => {
     );
   }
 
-  if (githubQuery.isLoading) {
+  if (
+    githubQuery.isLoading ||
+    youtubeQuery.isLoading ||
+    redditQuery.isLoading
+  ) {
     return (
       <Loader>
         <ClipLoader color="#6e8efb" size={50} />
@@ -167,7 +172,12 @@ const Dashboard = () => {
     );
   }
 
-  if (githubQuery.isError || !githubQuery.data) {
+  if (
+    githubQuery.isError ||
+    youtubeQuery.isError ||
+    redditQuery.isError ||
+    !githubQuery.data
+  ) {
     return (
       <Container>
         <p>{t("dashboard.error")}</p>
@@ -276,6 +286,28 @@ const Dashboard = () => {
       <CardsContainer>
         <SocialCard platform="github" data={data} />
         {/* Add more SocialCard components for other platforms as needed */}
+        {youtubeQuery.data && (
+          <SocialCard
+            platform="youtube"
+            data={{
+              subscriberCount: youtubeQuery.data.subscriberCount,
+              viewCount: youtubeQuery.data.viewCount,
+              videoCount: youtubeQuery.data.videoCount,
+              themeObject: themeObject,
+            }}
+          />
+        )}
+
+        {redditQuery.data && (
+          <SocialCard
+            platform="reddit"
+            data={{
+              totalKarma: redditQuery.data.totalKarma,
+              postKarma: redditQuery.data.postKarma,
+              commentKarma: redditQuery.data.commentKarma,
+            }}
+          />
+        )}
       </CardsContainer>
 
       <Sections title="Statistics Overview">
