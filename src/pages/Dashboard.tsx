@@ -26,6 +26,7 @@ import { useEffect, useState } from "react";
 import ChartWrapper from "../components/charts/ChartWrapper";
 import { useNavigate } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa";
+import { Platform } from "../types/types";
 
 ChartJS.register(
   CategoryScale,
@@ -124,9 +125,17 @@ const Dashboard = () => {
   const { themeObject } = useTheme();
   const navigate = useNavigate();
 
-  const { githubQuery, youtubeQuery, redditQuery } = useSocialMediaData({
+  const [selectedPlatform, setSelectedPlatform] = useState<Platform>("github");
+
+  const handlePlatformSelect = (platform: Platform) => {
+    setSelectedPlatform(platform);
+  };
+
+  const { githubQuery, youtubeQuery, gitlabQuery } = useSocialMediaData({
     github: username,
     youtube: import.meta.env.VITE_YOUTUBE_CHANNEL_ID,
+    reddit: username,
+    gitlab: username,
   });
 
   const [lineChartData, setLineChartData] = useState<LineChartData>({
@@ -135,7 +144,7 @@ const Dashboard = () => {
   });
 
   useEffect(() => {
-    if (githubQuery.data) {
+    if (selectedPlatform === "github" && githubQuery.data) {
       const labels = githubQuery.data.monthlyGrowth.map((item) => item.month);
       const data = githubQuery.data.monthlyGrowth.map((item) => item.followers);
       setLineChartData({
@@ -149,8 +158,51 @@ const Dashboard = () => {
           },
         ],
       });
+    } else if (selectedPlatform === "youtube" && youtubeQuery.data) {
+      // Update chart data for YouTube
+      const labels = ["Subscribers", "Views", "Videos"];
+      const data = [
+        youtubeQuery.data.subscriberCount,
+        youtubeQuery.data.viewCount,
+        youtubeQuery.data.videoCount,
+      ];
+      setLineChartData({
+        labels,
+        datasets: [
+          {
+            label: t("dashboard.youtubeStats"),
+            data,
+            borderColor: "#FF0000",
+            fill: false,
+          },
+        ],
+      });
+    } else if (selectedPlatform === "gitlab" && gitlabQuery.data) {
+      // Update chart data for GitLab
+      const labels = ["Projects", "Followers"];
+      const data = [
+        gitlabQuery.data.projects.length,
+        gitlabQuery.data.user.followers,
+      ];
+      setLineChartData({
+        labels,
+        datasets: [
+          {
+            label: t("dashboard.gitlabStats"),
+            data,
+            borderColor: "#FC6D26",
+            fill: false,
+          },
+        ],
+      });
     }
-  }, [githubQuery.data, t]);
+  }, [
+    selectedPlatform,
+    githubQuery.data,
+    youtubeQuery.data,
+    gitlabQuery.data,
+    t,
+  ]);
 
   if (!username) {
     return (
@@ -163,7 +215,7 @@ const Dashboard = () => {
   if (
     githubQuery.isLoading ||
     youtubeQuery.isLoading ||
-    redditQuery.isLoading
+    gitlabQuery.isLoading
   ) {
     return (
       <Loader>
@@ -175,7 +227,7 @@ const Dashboard = () => {
   if (
     githubQuery.isError ||
     youtubeQuery.isError ||
-    redditQuery.isError ||
+    gitlabQuery.isError ||
     !githubQuery.data
   ) {
     return (
@@ -284,8 +336,12 @@ const Dashboard = () => {
       </Username>
 
       <CardsContainer>
-        <SocialCard platform="github" data={data} />
-        {/* Add more SocialCard components for other platforms as needed */}
+        <SocialCard
+          platform="github"
+          data={data}
+          onClick={() => handlePlatformSelect("github")}
+          isSelected={selectedPlatform === "github"}
+        />
         {youtubeQuery.data && (
           <SocialCard
             platform="youtube"
@@ -295,27 +351,31 @@ const Dashboard = () => {
               videoCount: youtubeQuery.data.videoCount,
               themeObject: themeObject,
             }}
+            onClick={() => handlePlatformSelect("youtube")}
+            isSelected={selectedPlatform === "youtube"}
           />
         )}
 
-        {redditQuery.data && (
+        {gitlabQuery.data && (
           <SocialCard
-            platform="reddit"
+            platform="gitlab"
             data={{
-              totalKarma: redditQuery.data.totalKarma,
-              postKarma: redditQuery.data.postKarma,
-              commentKarma: redditQuery.data.commentKarma,
+              user: gitlabQuery.data.user,
+              projects: gitlabQuery.data.projects,
+              themeObject: themeObject,
             }}
+            onClick={() => handlePlatformSelect("gitlab")}
+            isSelected={selectedPlatform === "gitlab"}
           />
         )}
       </CardsContainer>
 
-      <Sections title="Statistics Overview">
+      <Sections title={t("dashboard.statisticsOverview")}>
         <ChartContainer>
           <ChartWrapper type="bar" data={chartData} options={chartOptions} />
         </ChartContainer>
       </Sections>
-      <Sections title="Followers Growth Over Time">
+      <Sections title={t("dashboard.followersGrowth")}>
         <ChartContainer>
           <ChartWrapper
             type="line"
@@ -325,13 +385,13 @@ const Dashboard = () => {
         </ChartContainer>
       </Sections>
 
-      <Sections title="Engagement Distribution">
+      <Sections title={t("dashboard.engagementDistribution")}>
         <ChartContainer>
           <ChartWrapper type="pie" data={pieChartData} options={chartOptions} />
         </ChartContainer>
       </Sections>
 
-      <Sections title="Follower Goal Progress">
+      <Sections title={t("dashboard.followerGoalProgress")}>
         <ProgressBar now={progress} label={`${Math.round(progress)}%`} />
       </Sections>
     </Container>

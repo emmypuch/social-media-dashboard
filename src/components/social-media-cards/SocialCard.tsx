@@ -1,9 +1,16 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { FaTwitter, FaGithub, FaLinkedin, FaYoutube } from "react-icons/fa";
-// import GitHubStats from "../GitHubStats";
+import {
+  FaTwitter,
+  FaGithub,
+  FaLinkedin,
+  FaYoutube,
+  FaGitlab,
+} from "react-icons/fa";
+import GitHubStats from "../GitHubStats";
 import { GitHubData } from "../../types/types";
-// import YouTubeStats from "../YoutubeStats";
+import YouTubeStats from "../YouTubeStats";
+import GitLabStats from "../GitLabStats";
 
 interface YouTubeData {
   subscriberCount: number;
@@ -13,19 +20,35 @@ interface YouTubeData {
   themeObject?: any;
 }
 
-interface RedditData {
-  totalKarma: number;
-  postKarma: number;
-  commentKarma: number;
+interface GitLabUser {
+  id: number;
+  username: string;
+  name: string;
+  public_repos: number;
+  followers: number;
+}
+
+interface GitLabProject {
+  id: number;
+  name: string;
+  star_count: number;
+  forks_count: number;
+}
+
+interface GitLabData {
+  user: GitLabUser;
+  projects: GitLabProject[];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   themeObject?: any;
 }
 
-type Platform = "github" | "twitter" | "linkedin" | "youtube" | "reddit";
+type Platform = "github" | "twitter" | "linkedin" | "youtube" | "gitlab";
 
 interface SocialCardProps {
   platform: Platform;
-  data: GitHubData | YouTubeData | RedditData;
+  onClick: () => void;
+  isSelected: boolean;
+  data: GitHubData | YouTubeData | GitLabData;
 }
 
 const CardContainer = styled.div`
@@ -57,11 +80,17 @@ const CardContent = styled.div<{ $isExpanded: boolean }>`
   width: 100%;
 `;
 
-const SocialCard: React.FC<SocialCardProps> = ({ platform, data }) => {
+const SocialCard: React.FC<SocialCardProps> = ({
+  platform,
+  data,
+  onClick,
+  isSelected,
+}) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const handleClick = () => {
     setIsExpanded(!isExpanded);
+    onClick();
   };
 
   const renderIcon = () => {
@@ -74,50 +103,38 @@ const SocialCard: React.FC<SocialCardProps> = ({ platform, data }) => {
         return <FaLinkedin />;
       case "youtube":
         return <FaYoutube />;
+      case "gitlab":
+        return <FaGitlab />;
       default:
         return null;
     }
   };
 
-  const renderContent = () => {
-    let content;
-    if (platform === "github") {
-      const githubData = data as GitHubData;
-      content = (
-        <>
-          <p>Followers: {githubData.user?.followers}</p>
-          <p>Repositories: {githubData.user?.public_repos}</p>
-        </>
-      );
-    } else if (platform === "youtube") {
-      const youtubeData = data as YouTubeData;
-      content = (
-        <>
-          <p>Subscribers: {youtubeData.subscriberCount}</p>
-          <p>Views: {youtubeData.viewCount}</p>
-          <p>Videos: {youtubeData.videoCount}</p>
-        </>
-      );
-    } else if (platform === "reddit") {
-      const redditData = data as RedditData;
-      content = (
-        <>
-          <p>Total Karma: {redditData.totalKarma}</p>
-          <p>Post Karma: {redditData.postKarma}</p>
-          <p>Comment Karma: {redditData.commentKarma}</p>
-        </>
-      );
-    } else {
-      content = <p>No data available for this platform.</p>;
+  const renderStats = () => {
+    switch (platform) {
+      case "github":
+        return <GitHubStats data={data as GitHubData} />;
+      case "youtube":
+        return <YouTubeStats data={data as YouTubeData} />;
+      case "gitlab": {
+        const gitlabData = data as GitLabData;
+        return (
+          <GitLabStats user={gitlabData.user} projects={gitlabData.projects} />
+        );
+      }
+      default:
+        return null;
     }
-
-    return content;
   };
 
   return (
-    <CardContainer onClick={handleClick} theme={data.themeObject}>
+    <CardContainer
+      onClick={handleClick}
+      theme={data.themeObject}
+      style={{ border: isSelected ? "2px solid #4A90E2" : "none" }}
+    >
       <IconWrapper>{renderIcon()}</IconWrapper>
-      <CardContent $isExpanded={isExpanded}>{renderContent()}</CardContent>
+      <CardContent $isExpanded={isExpanded}>{renderStats()}</CardContent>
     </CardContainer>
   );
 };

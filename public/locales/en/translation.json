@@ -25,7 +25,20 @@
     "followerGoalProgress": "Follower Goal Progress",
     "likes": "Likes",
     "shares": "Shares",
-    "comments": "Comments"
-
+    "comments": "Comments",
+    "githubOverview": "GitHub Overview",
+    "eventType": "{type} on {repoName}"
+  },
+  "gitlab": {
+    "title": "GitLab",
+    "username": "Username",
+    "name": "Name",
+    "publicRepos": "Public Repos",
+    "projects": "Projects"
+  },
+  "youtubeStats": {
+    "subscribers": "Subscribers",
+    "views": "Views",
+    "videos": "Videos"
   }
 }

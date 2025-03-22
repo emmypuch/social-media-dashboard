@@ -25,6 +25,20 @@
     "followerGoalProgress": "Progrès de l'Objectif d'Abonnés",
     "likes": "J'aime",
     "shares": "Partages",
-    "comments": "Commentaires"
+    "comments": "Commentaires",
+    "githubOverview": "Aperçu de GitHub",
+    "eventType": "{type} sur {repoName}"
+  },
+  "gitlab": {
+    "title": "GitLab",
+    "username": "Nom d'utilisateur",
+    "name": "Nom",
+    "publicRepos": "Dépôts publics",
+    "projects": "Projets"
+  },
+  "youtubeStats": {
+    "subscribers": "Abonnés",
+    "views": "Vues",
+    "videos": "Vidéos"
   }
 }

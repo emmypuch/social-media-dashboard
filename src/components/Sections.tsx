@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { ReactNode } from "react";
 import styled from "styled-components";
 
@@ -20,9 +21,11 @@ const SectionTitle = styled.h3`
 `;
 
 const Sections = ({ title, children }: SectionProps) => {
+  const { t } = useTranslation();
+
   return (
     <SectionContainer>
-      <SectionTitle>{title}</SectionTitle>
+      <SectionTitle>{t(title)}</SectionTitle>
       {children}
     </SectionContainer>
   );

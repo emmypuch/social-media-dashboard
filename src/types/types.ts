@@ -1,4 +1,4 @@
-export type Platform = "github" | "twitter" | "linkedin";
+export type Platform = "github" | "youtube" | "gitlab";
 
 export interface GitHubData {
   themeObject: {

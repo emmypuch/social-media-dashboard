@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import React from "react";
 import styled from "styled-components";
 
@@ -21,11 +22,19 @@ const StatItem = styled.div`
 `;
 
 const YouTubeStats: React.FC<YouTubeStatsProps> = ({ data }) => {
+  const { t } = useTranslation();
+
   return (
     <StatsContainer>
-      <StatItem>Subscribers: {data.subscriberCount}</StatItem>
-      <StatItem>Views: {data.viewCount}</StatItem>
-      <StatItem>Videos: {data.videoCount}</StatItem>
+      <StatItem>
+        {t("youtubeStats.subscribers")}: {data.subscriberCount}
+      </StatItem>
+      <StatItem>
+        {t("youtubeStats.views")}: {data.viewCount}
+      </StatItem>
+      <StatItem>
+        {t("youtubeStats.videos")}: {data.videoCount}
+      </StatItem>
     </StatsContainer>
   );
 };

@@ -1,50 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-
-interface GitHubUser {
-  public_repos: number;
-  followers: number;
-  login: string;
-}
-
-interface GitHubRepo {
-  name: string;
-  stargazers_count: number;
-  forks_count: number;
-}
-
-interface GitHubOrg {
-  login: string;
-  avatar_url: string;
-}
-
-interface GitHubEvent {
-  type: string;
-  repo: {
-    name: string;
-  };
-  created_at: string;
-}
-
-interface GitHubData {
-  user: GitHubUser;
-  repos: GitHubRepo[];
-  orgs: GitHubOrg[];
-  events: GitHubEvent[];
-  monthlyGrowth: { month: string; followers: number }[]; 
-}
-
-interface YouTubeChannelStats {
-  subscriberCount: number;
-  viewCount: number;
-  videoCount: number;
-}
-
-interface RedditUserStats {
-  totalKarma: number;
-  postKarma: number;
-  commentKarma: number;
-}
+import {
+  GitHubData,
+  YouTubeChannelStats,
+  GitLabData,
+} from "../interfaces/interface";
 
 const fetchGitHubData = async (username: string): Promise<GitHubData> => {
   if (!username) {
@@ -92,22 +52,31 @@ const fetchYouTubeData = async (channelId: string, apiKey: string): Promise<YouT
   };
 };
 
-const fetchRedditData = async (username: string): Promise<RedditUserStats> => {
-  const url = `https://www.reddit.com/user/${username}/about.json`;
-  const response = await axios.get(url);
+const fetchGitLabData = async (username: string, accessToken: string): Promise<GitLabData> => {
+  if (!username || !accessToken) {
+    throw new Error("GitLab username and access token are required");
+  }
 
-  const data = response.data.data;
+  const [userResponse, projectsResponse] = await Promise.all([
+    axios.get(`https://gitlab.com/api/v4/users?username=${username}`, {
+      headers: { "Authorization": `Bearer ${accessToken}` },
+    }),
+    axios.get(`https://gitlab.com/api/v4/users/${username}/projects`, {
+      headers: { "Authorization": `Bearer ${accessToken}` },
+    }),
+  ]);
+
   return {
-    totalKarma: data.total_karma,
-    postKarma: data.link_karma,
-    commentKarma: data.comment_karma,
+    user: userResponse.data[0],
+    projects: projectsResponse.data,
   };
 };
 
 // Custom hook to fetch social media data
-export const useSocialMediaData = (usernames: { github?: string; youtube?: string, reddit?: string }) => {
+export const useSocialMediaData = (usernames: { github?: string; youtube?: string, reddit?: string, gitlab?: string }) => {
    const youtubeApiKey = import.meta.env.VITE_YOUTUBE_API_KEY; 
   const youtubeChannelId = import.meta.env.VITE_YOUTUBE_CHANNEL_ID;
+   const gitlabAccessToken = import.meta.env.VITE_GITLAB_ACCESS_TOKEN;
 
    // GitHub Query
   const githubQuery = useQuery({
@@ -129,15 +98,15 @@ export const useSocialMediaData = (usernames: { github?: string; youtube?: strin
     enabled: !!usernames.youtube,
   });
 
-   // Reddit Query
-   const redditQuery = useQuery({
-    queryKey: ["reddit", usernames.reddit],
+  // GitLab Query
+  const gitlabQuery = useQuery({
+    queryKey: ["gitlab", usernames.gitlab],
     queryFn: () =>
-      usernames.reddit
-        ? fetchRedditData(usernames.reddit)
-        : Promise.reject("Reddit username missing"),
-    enabled: !!usernames.reddit,
+      usernames.gitlab
+        ? fetchGitLabData(usernames.gitlab, gitlabAccessToken)
+        : Promise.reject("GitLab username missing"),
+    enabled: !!usernames.gitlab,
   });
 
-  return { githubQuery, youtubeQuery, redditQuery };
+  return { githubQuery, youtubeQuery, gitlabQuery };
 };

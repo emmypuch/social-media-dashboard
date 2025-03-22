@@ -72,7 +72,7 @@ const GitHubStats = ({ data }: GitHubStatsProps) => {
   }
 
   return (
-    <Sections title="GitHub Overview">
+    <Sections title={t("dashboard.githubOverview")}>
       {/* Stats Cards */}
       <StatsContainer>
         <StatCard>
@@ -88,7 +88,7 @@ const GitHubStats = ({ data }: GitHubStatsProps) => {
       </StatsContainer>
 
       {/* Repositories */}
-      <Sections title="Top Repositories">
+      <Sections title={t("dashboard.topRepositories")}>
         {data.repos.length > 0 ? (
           <List>
             {data.repos.slice(0, 5).map((repo) => (
@@ -105,7 +105,7 @@ const GitHubStats = ({ data }: GitHubStatsProps) => {
       </Sections>
 
       {/* Organizations */}
-      <Sections title="Organizations">
+      <Sections title={t("dashboard.organizations")}>
         {data.orgs.length > 0 ? (
           <List>
             {data.orgs.map((org) => (
@@ -121,7 +121,7 @@ const GitHubStats = ({ data }: GitHubStatsProps) => {
       </Sections>
 
       {/* Recent Activity */}
-      <Sections title="Recent Activity">
+      <Sections title={t("dashboard.recentActivity")}>
         {data.events.length > 0 ? (
           <List>
             {data.events.slice(0, 5).map((event, index) => (
