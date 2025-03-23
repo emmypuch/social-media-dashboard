@@ -35,10 +35,10 @@ const CardContainer = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  // padding: 20px;
+  padding: 20px;
   margin: 10px;
   color: ${({ theme }) => theme.color};
-  // border-radius: 10px;
+  border-radius: 10px;
   // box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   cursor: pointer;
   transition: all 0.3s ease;

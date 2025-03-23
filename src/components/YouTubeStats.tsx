@@ -1,51 +1,7 @@
-// import { useTranslation } from "react-i18next";
-// import React from "react";
-// import styled from "styled-components";
-
-// interface YouTubeData {
-//   subscriberCount: number;
-//   viewCount: number;
-//   videoCount: number;
-// }
-
-// interface YouTubeStatsProps {
-//   data: YouTubeData;
-// }
-
-// const StatsContainer = styled.div`
-//   text-align: center;
-// `;
-
-// const StatItem = styled.div`
-//   margin: 10px 0;
-//   font-size: 1rem;
-// `;
-
-// const YouTubeStats: React.FC<YouTubeStatsProps> = ({ data }) => {
-//   const { t } = useTranslation();
-
-//   return (
-//     <StatsContainer>
-//       <StatItem>
-//         {t("youtubeStats.subscribers")}: {data.subscriberCount}
-//       </StatItem>
-//       <StatItem>
-//         {t("youtubeStats.views")}: {data.viewCount}
-//       </StatItem>
-//       <StatItem>
-//         {t("youtubeStats.videos")}: {data.videoCount}
-//       </StatItem>
-//     </StatsContainer>
-//   );
-// };
-
-// export default YouTubeStats;
-
 import { useTranslation } from "react-i18next";
 import React from "react";
 import styled from "styled-components";
-import { FaYoutube, FaUsers, FaEye, FaVideo } from "react-icons/fa";
-import ProgressBar from "react-bootstrap/ProgressBar";
+import { FaUsers, FaEye, FaVideo } from "react-icons/fa";
 
 interface YouTubeData {
   subscriberCount: number;
@@ -86,22 +42,12 @@ const StatValue = styled.span`
   font-weight: bold;
 `;
 
-const ProgressContainer = styled.div`
-  margin-top: 10px;
-`;
-
 const YouTubeStats: React.FC<YouTubeStatsProps> = ({ data }) => {
   const { t } = useTranslation();
 
-  const subscriberProgress = data.subscriberCount;
-  const viewProgress = data.viewCount;
-  const videoProgress = data.videoCount;
-
   return (
     <StatsContainer>
-      <h3>
-        <FaYoutube /> {t("youtubeStats.title")}
-      </h3>
+      <h3>{t("youtubeStats.title")}</h3>
 
       <StatItem>
         <StatLabel>
@@ -109,13 +55,6 @@ const YouTubeStats: React.FC<YouTubeStatsProps> = ({ data }) => {
         </StatLabel>
         <StatValue>{data.subscriberCount.toLocaleString()}</StatValue>
       </StatItem>
-      <ProgressContainer>
-        <ProgressBar
-          now={subscriberProgress}
-          label={`${subscriberProgress.toFixed(1)}%`}
-          variant="danger"
-        />
-      </ProgressContainer>
 
       <StatItem>
         <StatLabel>
@@ -123,13 +62,6 @@ const YouTubeStats: React.FC<YouTubeStatsProps> = ({ data }) => {
         </StatLabel>
         <StatValue>{data.viewCount.toLocaleString()}</StatValue>
       </StatItem>
-      <ProgressContainer>
-        <ProgressBar
-          now={viewProgress}
-          label={`${viewProgress.toFixed(1)}%`}
-          variant="info"
-        />
-      </ProgressContainer>
 
       <StatItem>
         <StatLabel>
@@ -137,13 +69,6 @@ const YouTubeStats: React.FC<YouTubeStatsProps> = ({ data }) => {
         </StatLabel>
         <StatValue>{data.videoCount.toLocaleString()}</StatValue>
       </StatItem>
-      <ProgressContainer>
-        <ProgressBar
-          now={videoProgress}
-          label={`${videoProgress.toFixed(1)}%`}
-          variant="success"
-        />
-      </ProgressContainer>
     </StatsContainer>
   );
 };
