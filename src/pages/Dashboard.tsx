@@ -51,6 +51,18 @@ interface LineChartData {
   }[];
 }
 
+interface ChartContext {
+  chart: {
+    data: {
+      datasets: {
+        data: number[];
+      }[];
+      labels: string[];
+    };
+  };
+  dataIndex: number;
+}
+
 const Container = styled.div`
   // max-width: 1200px;
   // margin: 20px auto;
@@ -91,6 +103,11 @@ const Header = styled.h2`
   color: ${({ theme }) => theme.color};
   margin-bottom: 20px;
   font-size: 2rem;
+
+  @media screen and (max-width: 768px) {
+    font-size: 1.5rem;
+    margin-top: 40px;
+  }
 `;
 
 const Username = styled.p`
@@ -159,7 +176,6 @@ const Dashboard = () => {
         ],
       });
     } else if (selectedPlatform === "youtube" && youtubeQuery.data) {
-      // Update chart data for YouTube
       const labels = ["Subscribers", "Views", "Videos"];
       const data = [
         youtubeQuery.data.subscriberCount,
@@ -178,7 +194,6 @@ const Dashboard = () => {
         ],
       });
     } else if (selectedPlatform === "gitlab" && gitlabQuery.data) {
-      // Update chart data for GitLab
       const labels = ["Projects", "Followers"];
       const data = [
         gitlabQuery.data.projects.length,
@@ -273,18 +288,6 @@ const Dashboard = () => {
     ],
   };
 
-  interface ChartContext {
-    chart: {
-      data: {
-        datasets: {
-          data: number[];
-        }[];
-        labels: string[];
-      };
-    };
-    dataIndex: number;
-  }
-
   const chartOptions = {
     responsive: true,
     maintainAspectRatio: false,
@@ -356,12 +359,33 @@ const Dashboard = () => {
           />
         )}
 
-        {gitlabQuery.data && (
+        {/* {gitlabQuery.data && (
           <SocialCard
             platform="gitlab"
             data={{
               user: gitlabQuery.data.user,
               projects: gitlabQuery.data.projects,
+              themeObject: themeObject,
+            }}
+            onClick={() => handlePlatformSelect("gitlab")}
+            isSelected={selectedPlatform === "gitlab"}
+          />
+        )} */}
+        {gitlabQuery.data && (
+          <SocialCard
+            platform="gitlab"
+            data={{
+              user: gitlabQuery.data.user || {
+                id: 0,
+                username: "",
+                name: "",
+                public_repos: 0,
+                followers: 0,
+                starredProjects: [],
+                events: [],
+                groups: [],
+              },
+              projects: gitlabQuery.data.projects || [],
               themeObject: themeObject,
             }}
             onClick={() => handlePlatformSelect("gitlab")}
@@ -399,3 +423,5 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
+// export default Dashboard;

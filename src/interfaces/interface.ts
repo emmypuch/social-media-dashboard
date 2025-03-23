@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface GitHubUser {
   public_repos: number;
   followers: number;
@@ -43,6 +44,9 @@ export interface GitLabUser {
   name: string;
   public_repos: number;
   followers: number;
+  starredProjects: any[];
+  events: any[];
+  groups: any[];
 }
 
 export interface GitLabProject {
@@ -55,4 +59,5 @@ export interface GitLabProject {
 export interface GitLabData {
   user: GitLabUser;
   projects: GitLabProject[];
+  themeObject?: any;
 }

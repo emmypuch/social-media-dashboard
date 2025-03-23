@@ -1,7 +1,7 @@
 {
   "home": {
     "title": "Enter your social media username",
-    "placeholder": "Enter GitHub, Twitter, or Instagram username",
+    "placeholder": "Enter GitHub, GitLab, or YouTube username",
     "submit": "Submit"
   },
   "dashboard": {
@@ -34,7 +34,10 @@
     "username": "Username",
     "name": "Name",
     "publicRepos": "Public Repos",
-    "projects": "Projects"
+    "projects": "Projects",
+    "starredProjects": "Starred Projects",
+    "groups": "Groups",
+    "noProjects": "No projects found"
   },
   "youtubeStats": {
     "subscribers": "Subscribers",

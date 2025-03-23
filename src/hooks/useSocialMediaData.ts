@@ -52,25 +52,109 @@ const fetchYouTubeData = async (channelId: string, apiKey: string): Promise<YouT
   };
 };
 
+// const fetchGitLabData = async (username: string, accessToken: string): Promise<GitLabData> => {
+//   if (!username || !accessToken) {
+//     throw new Error("GitLab username and access token are required");
+//   }
+//   const userResponse = await axios.get(`https://gitlab.com/api/v4/users?username=${username}`, {
+//     headers: { Authorization: `Bearer ${accessToken}` },
+//   });
+//   const user = userResponse.data[0];
+//   const projectsResponse = await axios.get(`https://gitlab.com/api/v4/users/${user.id}/projects`, {
+//     headers: { Authorization: `Bearer ${accessToken}` },
+//   });
+
+//   const starredProjectsResponse = await axios.get(
+//     `https://gitlab.com/api/v4/users/${user.id}/starred_projects`,
+//     {
+//       headers: { Authorization: `Bearer ${accessToken}` },
+//     }
+//   );
+
+//   const eventsResponse = await axios.get(`https://gitlab.com/api/v4/users/${user.id}/events`, {
+//     headers: { Authorization: `Bearer ${accessToken}` },
+//   });
+
+//   const groupsResponse = await axios.get(`https://gitlab.com/api/v4/users/${user.id}/groups`, {
+//     headers: { Authorization: `Bearer ${accessToken}` },
+//   });
+
+//   return {
+//     user: {
+//       ...user,
+//       starredProjects: starredProjectsResponse.data,
+//       events: eventsResponse.data,
+//       groups: groupsResponse.data,
+//     },
+//     projects: projectsResponse.data,
+//   };
+// };
+
 const fetchGitLabData = async (username: string, accessToken: string): Promise<GitLabData> => {
   if (!username || !accessToken) {
     throw new Error("GitLab username and access token are required");
   }
 
-  const [userResponse, projectsResponse] = await Promise.all([
-    axios.get(`https://gitlab.com/api/v4/users?username=${username}`, {
-      headers: { "Authorization": `Bearer ${accessToken}` },
-    }),
-    axios.get(`https://gitlab.com/api/v4/users/${username}/projects`, {
-      headers: { "Authorization": `Bearer ${accessToken}` },
-    }),
-  ]);
+  try {
+    const [userResponse, projectsResponse] = await Promise.all([
+      axios.get(`https://gitlab.com/api/v4/users?username=${username}`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      }),
+      axios.get(`https://gitlab.com/api/v4/users/${username}/projects`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      }),
+    ]);
 
-  return {
-    user: userResponse.data[0],
-    projects: projectsResponse.data,
-  };
+    return {
+      user: userResponse.data[0] || {
+        id: 0,
+        username: "",
+        name: "",
+        public_repos: 0,
+        followers: 0,
+        starredProjects: [],
+        events: [],
+        groups: [],
+      },
+      projects: projectsResponse.data || [],
+    };
+  } catch (error) {
+    console.error("Error fetching GitLab data:", error);
+    return {
+      user: {
+        id: 0,
+        username: "",
+        name: "",
+        public_repos: 0,
+        followers: 0,
+        starredProjects: [],
+        events: [],
+        groups: [],
+      },
+      projects: [],
+    };
+  }
 };
+
+// const fetchGitLabData = async (username: string, accessToken: string): Promise<GitLabData> => {
+//   if (!username || !accessToken) {
+//     throw new Error("GitLab username and access token are required");
+//   }
+
+//   const [userResponse, projectsResponse] = await Promise.all([
+//     axios.get(`https://gitlab.com/api/v4/users?username=${username}`, {
+//       headers: { "Authorization": `Bearer ${accessToken}` },
+//     }),
+//     axios.get(`https://gitlab.com/api/v4/users/${username}/projects`, {
+//       headers: { "Authorization": `Bearer ${accessToken}` },
+//     }),
+//   ]);
+
+//   return {
+//     user: userResponse.data[0],
+//     projects: projectsResponse.data,
+//   };
+// };
 
 // Custom hook to fetch social media data
 export const useSocialMediaData = (usernames: { github?: string; youtube?: string, reddit?: string, gitlab?: string }) => {

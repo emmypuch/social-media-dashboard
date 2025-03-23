@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
 import styled from "styled-components";
 import {
@@ -11,34 +12,12 @@ import GitHubStats from "../GitHubStats";
 import { GitHubData } from "../../types/types";
 import YouTubeStats from "../YouTubeStats";
 import GitLabStats from "../GitLabStats";
+import { GitLabData } from "../../interfaces/interface";
 
 interface YouTubeData {
   subscriberCount: number;
   viewCount: number;
   videoCount: number;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  themeObject?: any;
-}
-
-interface GitLabUser {
-  id: number;
-  username: string;
-  name: string;
-  public_repos: number;
-  followers: number;
-}
-
-interface GitLabProject {
-  id: number;
-  name: string;
-  star_count: number;
-  forks_count: number;
-}
-
-interface GitLabData {
-  user: GitLabUser;
-  projects: GitLabProject[];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   themeObject?: any;
 }
 
@@ -56,28 +35,53 @@ const CardContainer = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 20px;
+  // padding: 20px;
   margin: 10px;
-  //   background: ${({ theme }) => theme.cardBackground};
   color: ${({ theme }) => theme.color};
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  // border-radius: 10px;
+  // box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   cursor: pointer;
   transition: all 0.3s ease;
 
   &:hover {
     transform: scale(1.05);
   }
+
+  @media (max-width: 768px) {
+    padding: 15px;
+    margin: 5px;
+  }
+
+  @media (max-width: 480px) {
+    padding: 10px;
+    margin: 5px;
+  }
 `;
 
 const IconWrapper = styled.div`
   font-size: 2rem;
   margin-bottom: 10px;
+
+  @media (max-width: 768px) {
+    font-size: 1.5rem;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 1.2rem;
+  }
 `;
 
 const CardContent = styled.div<{ $isExpanded: boolean }>`
   display: ${({ $isExpanded }) => ($isExpanded ? "block" : "none")};
   width: 100%;
+
+  @media (max-width: 768px) {
+    font-size: 0.9rem;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 0.8rem;
+  }
 `;
 
 const SocialCard: React.FC<SocialCardProps> = ({

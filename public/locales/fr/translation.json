@@ -1,7 +1,7 @@
 {
   "home": {
     "title": "Entrez votre nom d'utilisateur de réseaux sociaux",
-    "placeholder": "Entrez votre nom d'utilisateur GitHub, Twitter ou Instagram",
+    "placeholder": "Entrez votre nom d'utilisateur GitHub, GitLab ou YouTube",
     "submit": "Soumettre"
   },
   "dashboard": {
@@ -34,7 +34,9 @@
     "username": "Nom d'utilisateur",
     "name": "Nom",
     "publicRepos": "Dépôts publics",
-    "projects": "Projets"
+    "projects": "Projets",
+    "starredProjects": "Projets favoris",
+    "groups": "Groupe"
   },
   "youtubeStats": {
     "subscribers": "Abonnés",
